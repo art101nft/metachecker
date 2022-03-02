@@ -1,0 +1,10 @@
+alembic
+arrow
+Flask
+Flask-SQLAlchemy
+Flask-Login
+gunicorn
+python-dotenv
+requests
+web3
+flake8

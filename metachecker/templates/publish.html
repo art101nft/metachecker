@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  {% include 'includes/head.html' %}
+  <body>
+  <section class="section">
+    <div class="container">
+      {% include 'includes/navbar.html' %}
+
+      <div class="screen">
+      <form method="POST" enctype="multipart/form-data" class="site-form" id="memeUpload" action="{{ url_for('meme.publish') }}" style="padding-top:1.5em;">
+        <div class="field">
+          <label class="label">File</label>
+          <div class="control">
+            <input class="filestyle" id="file" name="file" required type="file">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Poster Address</label>
+          <div class="control">
+            <p>{{ current_user.public_address }}</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Title</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Title of your meme" name="title">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Description</label>
+          <div class="control">
+            <textarea class="textarea" placeholder="Description..." name="description"></textarea>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <label class="checkbox">
+              <input type="checkbox">
+              I agree to support the ongoing funding of exploratory meme missions
+            </label>
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="button is-primary" up-follow=".container">Submit</button>
+          </div>
+        </div>
+      </form>
+      </div>
+    </div>
+  </section>
+  </body>
+</html>
