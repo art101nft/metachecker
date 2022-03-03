@@ -9,21 +9,11 @@
   <a class="button is-secondary" href="{{ url_for('meta.about') }}" up-target=".container">About</a>
   {% if current_user.is_authenticated %}
     <a class="button is-danger" href="{{ url_for('meta.disconnect') }}">Disconnect</a>
-    {% if current_user.is_moderator() %}
-      <a class="button is-warning" href="{{ url_for('collection.mod') }}" up-preload up-follow=".container">Mod</a>
-    {% endif %}
-    {# <a class="button is-primary" href="{{ url_for('collection.publish') }}">New collection</a> #}
+    <a class="button is-primary" href="{{ url_for('collection.new') }}">New Collection</a>
   {% else %}
     <a class="button is-primary" id="metamaskConnect" onclick="onboardMetaMask();">Connect</a>
   {% endif %}
   {% else %}
   <a class="button" href="{{ url_for('collection.index') }}" up-preload up-follow=".container">Go Home</a>
-  {% endif %}
-
-  {% if request.path == '/remotes' %}
-  <a class="button is-warning" href="{{ url_for('collection.mod') }}" up-preload up-follow=".container">Mod</a>
-  {% endif %}
-  {% if request.path == '/mod' %}
-  <a class="button is-warning" href="{{ url_for('meta.remotes') }}" up-preload up-follow=".container">Remotes</a>
   {% endif %}
 </div>

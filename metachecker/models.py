@@ -13,17 +13,6 @@ def rand_id():
     return uuid4().hex
 
 
-class Moderator(db.Model):
-    __tablename__ = 'moderators'
-
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = db.relationship('User', back_populates='moderator')
-
-    def __rep__(self):
-        return self.user.handle
-
-
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -33,7 +22,7 @@ class User(db.Model):
     public_address = db.Column(db.String(180))
     nonce = db.Column(db.String(180), default=rand_id())
     nonce_date = db.Column(db.DateTime, default=datetime.utcnow)
-    moderator = db.relationship('Moderator', back_populates='user')
+    moderator = db.Column(db.Boolean, default=False)
     collections = db.relationship('Collection', back_populates='user')
 
     def as_dict(self):
@@ -60,7 +49,7 @@ class User(db.Model):
         return self.admin
 
     def is_moderator(self):
-        return len(self.moderator) > 0
+        return self.moderator
 
     def get_id(self):
         return self.id
@@ -88,7 +77,8 @@ class Collection(db.Model):
     metadata_uri = db.Column(db.String(100), unique=True, nullable=True)
     title = db.Column(db.String(50))
     secret_token = db.Column(db.String(50), default=token_urlsafe(8))
-    # synced = db.Column(db.Boolean, default=False)
+    start_token_id = db.Column(db.Integer)
+    end_token_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('User', back_populates='collections')
 

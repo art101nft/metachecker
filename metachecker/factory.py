@@ -39,6 +39,6 @@ def create_app():
         app.register_blueprint(api.bp)
         app.register_blueprint(collection.bp)
         app.register_blueprint(meta.bp)
-        # app.register_blueprint(mod.bp)
-        # app.register_blueprint(cli.bp)
+        app.register_blueprint(mod.bp)
+        app.register_blueprint(cli.bp)
         return app

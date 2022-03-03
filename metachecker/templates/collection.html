@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+  {% include 'includes/head.html' %}
+  <body>
+  <section class="section">
+    <div class="container">
+
+      {% include 'includes/navbar.html' %}
+
+
+        <div id="screen">
+          <div class="screen">
+            <br/>
+            <p><strong>collection ID:</strong> <code>{{ collection.id }}</code></p>
+            <p><strong>Title:</strong> {{ collection.title }}</p>
+            <p><strong>Creator Address:</strong> <a href="#">{{ collection.user.public_address }}</a></p>
+            <p><strong>Base Metadata URI:</strong> <a href="#" target=_self>{{ collection.metadata_uri }}</a></p>
+          </div>
+        </div>
+
+    </div>
+  </section>
+  {% include 'includes/footer.html' %}
+  </body>
+</html>

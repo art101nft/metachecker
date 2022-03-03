@@ -7,16 +7,9 @@
       {% include 'includes/navbar.html' %}
 
       <div class="screen">
-      <form method="POST" enctype="multipart/form-data" class="site-form" id="memeUpload" action="{{ url_for('meme.publish') }}" style="padding-top:1.5em;">
+      <form method="POST" enctype="multipart/form-data" class="site-form" action="{{ url_for('collection.new') }}" style="padding-top:1.5em;">
         <div class="field">
-          <label class="label">File</label>
-          <div class="control">
-            <input class="filestyle" id="file" name="file" required type="file">
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Poster Address</label>
+          <label class="label">Creator Address</label>
           <div class="control">
             <p>{{ current_user.public_address }}</p>
           </div>
@@ -25,23 +18,28 @@
         <div class="field">
           <label class="label">Title</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Title of your meme" name="title">
+            <input class="input" type="text" placeholder="Title of your collection" name="title">
           </div>
         </div>
 
         <div class="field">
-          <label class="label">Description</label>
+          <label class="label">Base Metadata URI</label>
           <div class="control">
-            <textarea class="textarea" placeholder="Description..." name="description"></textarea>
+            <input class="input" type="text" placeholder="https://gateway.pinata.cloud/ipfs/xxxxxxxxxxxxxxx/" name="metadata_uri">
           </div>
         </div>
 
         <div class="field">
+          <label class="label">Start Token ID</label>
           <div class="control">
-            <label class="checkbox">
-              <input type="checkbox">
-              I agree to support the ongoing funding of exploratory meme missions
-            </label>
+            <input class="input" type="number" min=0 placeholder="1" name="start_token_id">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">End Token ID</label>
+          <div class="control">
+            <input class="input" type="number" min=0 placeholder="10000" name="end_token_id">
           </div>
         </div>
 
@@ -54,5 +52,6 @@
       </div>
     </div>
   </section>
+  {% include 'includes/footer.html' %}
   </body>
 </html>

@@ -9,11 +9,15 @@
       {% if collections %}
         {% for _col in collections | batch(4) %}
         <div class="columns">
-          {% for meme in _col %}
-          {% include 'includes/meme_card.html' %}
+          {% for collection in _col %}
+          {% include 'includes/collection_card.html' %}
           {% endfor %}
         </div>
         {% endfor %}
+      {% else %}
+        <div class="columns">
+          <p>No collections</p>
+        </div>
       {% endif %}
 
     </div>
