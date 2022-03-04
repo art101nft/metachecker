@@ -8,16 +8,28 @@
 
       {% include 'includes/navbar.html' %}
 
+      <h1>{{ collection.title }}</h1>
 
-        <div id="screen">
-          <div class="screen">
-            <br/>
-            <p><strong>collection ID:</strong> <code>{{ collection.id }}</code></p>
-            <p><strong>Title:</strong> {{ collection.title }}</p>
-            <p><strong>Creator Address:</strong> <a href="#">{{ collection.user.public_address }}</a></p>
-            <p><strong>Base Metadata URI:</strong> <a href="#" target=_self>{{ collection.metadata_uri }}</a></p>
+      {% for _tokens in tokens | batch(4) %}
+      <div class="columns" id="tokens">
+        {% for token in _tokens %}
+          <div class="column">
+            <p>{{ collection.metadata_uri }}{{ token }}</p>
           </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+
+      <div class="columns">
+        <div class="column">
+          {% if page > 1 %}
+          <a class="button is-success is-12 column" href="?page={{ page - 1 }}" up-target=".container"><- Back</a>
+          {% endif %}
         </div>
+        <div class="column">
+          <a class="button is-success is-12 column" href="?page={{ page + 1 }}" up-target=".container">Next -></a>
+        </div>
+      </div>
 
     </div>
   </section>

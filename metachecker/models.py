@@ -24,6 +24,7 @@ class User(db.Model):
     nonce_date = db.Column(db.DateTime, default=datetime.utcnow)
     moderator = db.Column(db.Boolean, default=False)
     collections = db.relationship('Collection', back_populates='user')
+    accesses = db.relationship('Access', back_populates='user')
 
     def as_dict(self):
         return {c.key: getattr(self, c.key)
@@ -72,7 +73,7 @@ class User(db.Model):
 class Collection(db.Model):
     __tablename__ = 'collections'
 
-    id = db.Column(db.String(80), default=rand_id, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
     metadata_uri = db.Column(db.String(100), unique=True, nullable=True)
     title = db.Column(db.String(50))
@@ -81,10 +82,34 @@ class Collection(db.Model):
     end_token_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('User', back_populates='collections')
+    accesses = db.relationship('Access', back_populates='collection')
+
+    def as_dict(self):
+        return {c.key: getattr(self, c.key)
+            for c in inspect(self).mapper.column_attrs}
+
+    def user_can_access(self, user_id):
+        if user_id == self.user_id or user_id in self.accesses:
+            return True
+        else:
+            return False
+
+    def __repr__(self):
+        return str(f'collection-{self.id}')
+
+
+class Access(db.Model):
+    __tablename__ = 'access'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('User', back_populates='accesses')
+    collection_id = db.Column(db.Integer, db.ForeignKey('collections.id'))
+    collection = db.relationship('Collection', back_populates='accesses')
 
     def as_dict(self):
         return {c.key: getattr(self, c.key)
             for c in inspect(self).mapper.column_attrs}
 
     def __repr__(self):
-        return str(f'collection-{self.id}')
+        return str(f'access-{self.id}')
