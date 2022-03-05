@@ -1,17 +1,39 @@
-{# expects collection var #}
+{# expects token and collection vars #}
 <div class="card">
+  <div class="card-image">
+    <figure class="image">
+      <a href="#">
+        <img alt="{{ collection.title }} #{{ token }}" src="#" width="200px" class="img-fluid" />
+      </a>
+    </figure>
+  </div>
   <div class="card-content">
     <div class="media">
       <div class="media-left">
+        {#
+        {% if meme.user.profile_image %}
+        <figure class="image is-48x48">
+          <img src="{{ url_for('meta.uploaded_file', filename=meme.user.profile_image) }}" alt="{{ meme.user.handle }} pfp">
+        </figure>
+        {% endif %}
+        #}
       </div>
       <div class="media-content">
         <p class="title is-4">{{ collection.title }}</p>
-        <p class="subtitle is-6"></p>
+        <p class="subtitle is-6">ok</p>
       </div>
     </div>
 
     <div class="content">
       <time datetime="2016-1-1">{{ collection.create_date.strftime('%H:%M UTC - %d %b %Y') }}</time>
+      <div class="columns mt-2">
+        <div class="column">
+          <a class="button is-success" href="#">Approve</a>
+        </div>
+        <div class="column">
+          <a class="button is-danger" href="#">Deny</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>

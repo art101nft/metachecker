@@ -1,11 +1,11 @@
-from os import path, remove
-from secrets import token_urlsafe
+from math import ceil
 
 from flask import Blueprint, render_template, flash
 from flask import request, redirect, url_for
 from flask_login import current_user
 
-from metachecker.models import Collection, User
+from metachecker.models import Collection, User, Token
+from metachecker.tasks.metadata import fetch_collection_metadata
 from metachecker.factory import db
 from metachecker import config
 
@@ -42,15 +42,19 @@ def new():
         if not request.form.get('end_token_id').isnumeric():
             flash('You need to specify a valid ending token number, ie, 7777,10000,etc', 'warning')
             return redirect(url_for('collection.new'))
+        metadata_uri = request.form.get('metadata_uri')
+        if not metadata_uri.endswith('/'):
+            metadata_uri = metadata_uri + '/'
         c = Collection(
             title=request.form.get('title'),
-            metadata_uri=request.form.get('metadata_uri'),
+            metadata_uri=metadata_uri,
             start_token_id=request.form.get('start_token_id'),
             end_token_id=request.form.get('end_token_id'),
             user_id=current_user.id
         )
         db.session.add(c)
         db.session.commit()
+        fetch_collection_metadata.schedule([c.id], delay=3)
         return redirect(url_for('collection.show', collection_id=c.id))
     return render_template(
         'new.html'
@@ -74,12 +78,18 @@ def show(collection_id):
     if not collection.user_can_access(current_user.id):
         flash('You are not allowed to access that collection.', 'warning')
         return redirect(url_for('collection.index'))
-    end_token = page * amt
-    start_token = end_token - amt
-    tokens = [i for i in range(start_token, end_token + 1) if i >= collection.start_token_id and i <= collection.end_token_id]
+    # end_token = page * amt
+    # start_token = end_token - amt
+    # tokens = [i for i in range(start_token, end_token + 1) if i >= collection.start_token_id and i <= collection.end_token_id]
+    _tokens = Token.query.filter(
+        Token.collection_id == collection.id
+    )
+    total_pages = ceil(_tokens.count() / amt)
+    tokens = _tokens.paginate(page, amt, error_out=False).items
     return render_template(
         'collection.html',
         collection=collection,
         tokens=tokens,
+        total_pages=total_pages,
         page=page
     )

@@ -1,6 +1,6 @@
+import json
 from uuid import uuid4
 from datetime import datetime
-from secrets import token_urlsafe
 
 from flask_login import login_user
 from sqlalchemy import inspect
@@ -75,14 +75,14 @@ class Collection(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
-    metadata_uri = db.Column(db.String(100), unique=True, nullable=True)
+    metadata_uri = db.Column(db.String(100))
     title = db.Column(db.String(50))
-    secret_token = db.Column(db.String(50), default=token_urlsafe(8))
     start_token_id = db.Column(db.Integer)
     end_token_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('User', back_populates='collections')
     accesses = db.relationship('Access', back_populates='collection')
+    tokens = db.relationship('Token', back_populates='collection')
 
     def as_dict(self):
         return {c.key: getattr(self, c.key)
@@ -94,8 +94,38 @@ class Collection(db.Model):
         else:
             return False
 
+    def get_metadata_folder(self):
+        return f'{config.DATA_FOLDER}/json/{self.id}'
+
     def __repr__(self):
         return str(f'collection-{self.id}')
+
+
+class Token(db.Model):
+    __tablename__ = 'tokens'
+
+    id = db.Column(db.Integer, primary_key=True)
+    token_id = db.Column(db.Integer)
+    collection_id = db.Column(db.Integer, db.ForeignKey('collections.id'))
+    collection = db.relationship('Collection', back_populates='tokens')
+
+    def as_dict(self):
+        return {c.key: getattr(self, c.key)
+            for c in inspect(self).mapper.column_attrs}
+
+    def get_metadata_path(self):
+        return f'{self.collection.get_metadata_folder()}/{self.token_id}.json'
+
+    def get_metadata_dict(self):
+        with open(self.get_metadata_path(), 'r') as f:
+            return json.loads(f.read())
+
+    def set_metadata_dict(self, data):
+        with open(self.get_metadata_path(), 'w') as f:
+            f.write(json.dumps(data))
+
+    def __repr__(self):
+        return str(f'token-{self.id}')
 
 
 class Access(db.Model):

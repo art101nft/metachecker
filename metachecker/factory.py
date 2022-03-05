@@ -16,6 +16,12 @@ def setup_db(app: Flask, db: SQLAlchemy = db):
     db.init_app(app)
     return db
 
+def create_app_huey():
+    _app = Flask(__name__)
+    _db = SQLAlchemy()
+    dictConfig(config.LOGGING_CONFIG)
+    setup_db(_app, _db)
+    return _app
 
 def create_app():
     app = Flask(__name__)

@@ -10,11 +10,11 @@
 
       <h1>{{ collection.title }}</h1>
 
-      {% for _tokens in tokens | batch(4) %}
+      {% for _tokens in tokens | batch(3) %}
       <div class="columns" id="tokens">
         {% for token in _tokens %}
           <div class="column">
-            <p>{{ collection.metadata_uri }}{{ token }}</p>
+            {% include 'includes/token_card.html' %}
           </div>
         {% endfor %}
       </div>
@@ -27,7 +27,9 @@
           {% endif %}
         </div>
         <div class="column">
+          {% if page < total_pages %}
           <a class="button is-success is-12 column" href="?page={{ page + 1 }}" up-target=".container">Next -></a>
+          {% endif %}
         </div>
       </div>
 

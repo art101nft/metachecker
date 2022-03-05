@@ -1,7 +1,7 @@
 setup:
 	python3 -m venv .venv
 	.venv/bin/pip install -r requirements.txt
-	mkdir -p data/uploads
+	mkdir -p data/json
 
 shell:
 	bash manage.sh shell
@@ -14,6 +14,9 @@ dev:
 
 prod:
 	bash manage.sh prod
+
+huey:
+	.venv/bin/huey_consumer metachecker.tasks.huey -w 1
 
 install-ipfs:
 	wget https://dist.ipfs.io/go-ipfs/v0.10.0/go-ipfs_v0.10.0_linux-amd64.tar.gz
