@@ -97,6 +97,12 @@ class Collection(db.Model):
     def get_metadata_folder(self):
         return f'{config.DATA_FOLDER}/json/{self.id}'
 
+    def is_sync_completed(self):
+        tokens = Token.query.filter(
+            Token.collection_id == self.id
+        ).count()
+        return tokens == len(range(self.start_token_id, self.end_token_id + 1))
+
     def __repr__(self):
         return str(f'collection-{self.id}')
 

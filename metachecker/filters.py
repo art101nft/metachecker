@@ -19,3 +19,8 @@ def humanize(d):
     if not d:
         return 'never'
     return arrow_get(d).humanize()
+
+@bp.app_template_filter('convert_ipfs_uri')
+def convert_ipfs_uri(u):
+    ipfs = u.split('ipfs://')[1]
+    return f'https://gateway.pinata.cloud/ipfs/{ipfs}'
