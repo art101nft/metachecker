@@ -1,0 +1,19 @@
+version: '3'
+services:
+  cache:
+    image: redis:latest
+    container_name: metachecker_cache
+    restart: always
+    ports:
+      - 127.0.0.1:6379:6379
+  ipfs:
+    image: ipfs/go-ipfs:v0.7.0
+    container_name: metachecker_ipfs
+    restart: always
+    ports:
+      - 0.0.0.0:4001:4001
+      - 127.0.0.1:5001:5001
+      - 0.0.0.0:8080:8080
+    volumes:
+      - ./data/ipfs/export:/export
+      - ./data/ipfs/data:/data/ipfs

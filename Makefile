@@ -15,6 +15,9 @@ dev:
 prod:
 	bash manage.sh prod
 
+up:
+	docker-compose up -d
+
 huey:
 	.venv/bin/huey_consumer metachecker.tasks.huey -w 1
 
