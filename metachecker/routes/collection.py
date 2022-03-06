@@ -78,9 +78,6 @@ def show(collection_id):
     if not collection.user_can_access(current_user.id):
         flash('You are not allowed to access that collection.', 'warning')
         return redirect(url_for('collection.index'))
-    # end_token = page * amt
-    # start_token = end_token - amt
-    # tokens = [i for i in range(start_token, end_token + 1) if i >= collection.start_token_id and i <= collection.end_token_id]
     _tokens = Token.query.filter(
         Token.collection_id == collection.id
     )
@@ -93,3 +90,24 @@ def show(collection_id):
         total_pages=total_pages,
         page=page
     )
+
+@bp.route('/collection/<collection_id>/<token_id>')
+def show_token(collection_id, token_id):
+    collection = Collection.query.get(collection_id)
+    if not collection:
+        flash('That collection does not exist!', 'warning')
+        return redirect(url_for('collection.index'))
+    token = Token.query.filter(
+        Token.token_id == token_id,
+        Token.collection_id == collection_id
+    ).first()
+    if not token:
+        flash('That token does not exist for that collection!', 'warning')
+        return redirect(url_for('collection.show', collection_id=collection_id))
+    if current_user.is_anonymous:
+        flash('Must be authenticated.', 'warning')
+        return redirect(url_for('collection.index'))
+    if not collection.user_can_access(current_user.id):
+        flash('You are not allowed to access that collection.', 'warning')
+        return redirect(url_for('collection.index'))
+    return render_template('token.html', token=token)
