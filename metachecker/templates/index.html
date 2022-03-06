@@ -17,7 +17,7 @@
         <tbody>
           {% for collection in collections %}
           <tr>
-            <td><a href="{{ url_for('collection.show', collection_id=collection.id) }}" up-target=".container">{{ collection.title }}</a></td>
+            <td><a href="{{ url_for('collection.show', collection_id=collection.id) }}" up-target=".container" up-transition="cross-fade">{{ collection.title }}</a></td>
             <td>{{ collection.metadata_uri }}</td>
             <td>{{ collection.create_date | humanize }}</td>
           </tr>

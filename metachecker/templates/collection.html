@@ -1,33 +1,47 @@
-
+{% set total_tokens = collection.end_token_id + 1 - collection.start_token_id %}
 <!DOCTYPE html>
 <html>
   {% include 'includes/head.html' %}
   <body>
   {% include 'includes/navbar.html' %}
   <section class="section">
-    <div class="container">
-      <h1>{{ collection.title }}</h1>
-      {% for _tokens in tokens | batch(3) %}
-      <div class="columns" id="tokens">
-        {% for token in _tokens %}
-          <div class="column">
-            {% include 'includes/token_card.html' %}
+    <div class="container has-text-centered">
+      <h1 class="title">{{ collection.title }}</h1>
+      <nav class="level">
+        <div class="level-item">
+          <div>
+            <p class="heading">Tokens</p>
+            <p class="title">{{ total_tokens }}</p>
+            {% if (collection.tokens | length) < total_tokens %}
+            <p>{{ collection.tokens | length }} tokens scanned</p>
+            {% endif %}
           </div>
-        {% endfor %}
-      </div>
-      {% endfor %}
-      <div class="columns screen block">
-        <div class="column">
-          {% if page > 1 %}
-          <a class="button is-success is-12 column" href="?page={{ page - 1 }}" up-target=".container"><- Back</a>
-          {% endif %}
         </div>
-        <div class="column">
-          {% if page < total_pages %}
-          <a class="button is-success is-12 column" href="?page={{ page + 1 }}" up-target=".container">Next -></a>
-          {% endif %}
+        <div class="level-item">
+          <div>
+            <p class="heading">Collaborators</p>
+            <p class="title">{{ (collection.accesses | length) + 1 }}</p>
+          </div>
         </div>
-      </div>
+        <div class="level-item">
+          <div>
+            <p class="heading">Rejected</p>
+            <p class="title">0</p>
+          </div>
+        </div>
+        <div class="level-item">
+          <div>
+            <p class="heading">Approved</p>
+            <p class="title">0</p>
+          </div>
+        </div>
+        <div class="level-item">
+          <div>
+            <p class="heading">Unreviewed</p>
+            <p class="title">0</p>
+          </div>
+        </div>
+      </nav>
     </div>
   </section>
   {% include 'includes/footer.html' %}

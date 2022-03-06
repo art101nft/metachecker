@@ -114,6 +114,9 @@ class Token(db.Model):
     token_id = db.Column(db.Integer)
     collection_id = db.Column(db.Integer, db.ForeignKey('collections.id'))
     collection = db.relationship('Collection', back_populates='tokens')
+    approved = db.Column(db.Boolean, default=False)
+    rejected = db.Column(db.Boolean, default=False)
+    reject_reason = db.Column(db.String(200), nullable=True)
 
     def as_dict(self):
         return {c.key: getattr(self, c.key)

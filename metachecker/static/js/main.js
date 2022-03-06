@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
   // unpoly config adjustments
-  // up.link.config.followSelectors.push('a[href]');
   up.fragment.config.mainTargets.push('.container');
 });
 
