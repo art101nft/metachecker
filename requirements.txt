@@ -8,3 +8,4 @@ python-dotenv
 requests
 web3
 flake8
+ipfshttpclient==0.7.0
