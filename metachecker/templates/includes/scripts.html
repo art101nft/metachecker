@@ -1,7 +1,10 @@
-<script src="/static/js/vendor/metamask-onboarding-1.0.1.bundle.js"></script>
 <script src="/static/js/vendor/noty-3.2.0.js"></script>
+<script src="/static/js/vendor/unpoly-2.5.0.min.js"></script>
 <script src="/static/js/main.js"></script>
+
+{% if current_user.is_anonymous %}
 {% include 'includes/web3.html' %}
+{% endif %}
 
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}

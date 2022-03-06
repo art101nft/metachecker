@@ -10,12 +10,12 @@
         <div class="columns">
           <div class="column">
             {% if token.token_id > token.collection.start_token_id %}
-            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=token.token_id - 1) }}" up-target=".container" up-follow up-preload up-transition="move-right"><- Back</a>
+            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=token.token_id - 1) }}" up-follow up-cache="true" up-target=".container" up-preload up-transition="move-right"><- Back</a>
             {% endif %}
           </div>
           <div class="column">
             {% if token.token_id < token.collection.end_token_id %}
-            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=token.token_id + 1) }}" up-target=".container" up-follow up-preload up-transition="move-left">Next -></a>
+            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=token.token_id + 1) }}" up-follow up-cache="true" up-target=".container" up-preload up-transition="move-left">Next -></a>
             {% endif %}
           </div>
         </div>
@@ -24,7 +24,7 @@
         <p class="block">{{ data.description }}</p>
         <div class="has-text-centered">
           {% for attrib in data.attributes %}
-            <span class="tag is-light"><strong>{{ attrib.trait_type }}: </strong>{{ attrib.value }}</span>
+            <span class="tag is-light"><strong>{{ attrib.trait_type }}:</strong> {{ attrib.value }}</span>
           {% endfor %}
         </div>
       </div>

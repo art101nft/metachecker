@@ -1,3 +1,9 @@
+window.addEventListener('DOMContentLoaded', () => {
+  // unpoly config adjustments
+  // up.link.config.followSelectors.push('a[href]');
+  up.fragment.config.mainTargets.push('.container');
+});
+
 async function notif(s, t) {
   new Noty({
     type: t,
@@ -8,7 +14,3 @@ async function notif(s, t) {
   }).show();
   return
 }
-
-window.addEventListener('DOMContentLoaded', () => {
-  up.link.config.followSelectors.push('a[href]')
-});
