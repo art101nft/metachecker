@@ -3,13 +3,10 @@
 <html>
   {% include 'includes/head.html' %}
   <body>
+  {% include 'includes/navbar.html' %}
   <section class="section">
     <div class="container">
-
-      {% include 'includes/navbar.html' %}
-
       <h1>{{ collection.title }}</h1>
-
       {% for _tokens in tokens | batch(3) %}
       <div class="columns" id="tokens">
         {% for token in _tokens %}
@@ -19,8 +16,7 @@
         {% endfor %}
       </div>
       {% endfor %}
-
-      <div class="columns">
+      <div class="columns screen block">
         <div class="column">
           {% if page > 1 %}
           <a class="button is-success is-12 column" href="?page={{ page - 1 }}" up-target=".container"><- Back</a>
@@ -32,7 +28,6 @@
           {% endif %}
         </div>
       </div>
-
     </div>
   </section>
   {% include 'includes/footer.html' %}

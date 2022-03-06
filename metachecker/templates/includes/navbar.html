@@ -1,19 +1,26 @@
-<div class="screen">
-  <h1 class="title">
-    metachecker.
-  </h1>
-  <p class="subtitle">
-    NFT project metadata checker
-  </p>
-  {% if request.path == '/' %}
-  <a class="button is-secondary" href="{{ url_for('meta.about') }}" up-target=".container">About</a>
-  {% if current_user.is_authenticated %}
-    <a class="button is-danger" href="{{ url_for('meta.disconnect') }}">Disconnect</a>
-    <a class="button is-primary" href="{{ url_for('collection.new') }}">New Collection</a>
-  {% else %}
-    <a class="button is-primary" id="metamaskConnect" onclick="onboardMetaMask();">Connect</a>
-  {% endif %}
-  {% else %}
-  <a class="button" href="{{ url_for('collection.index') }}" up-preload up-follow=".container">Go Home</a>
-  {% endif %}
-</div>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/" up-target=".container">
+      <!-- <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"> -->
+      <h1 class="title">metachecker</h1>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="/" up-target=".container">Home</a>
+      <a class="navbar-item" href="{{ url_for('meta.about') }}" up-target=".container">About</a>
+    </div>
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          {% if current_user.is_authenticated %}
+            <a class="button is-danger" href="{{ url_for('meta.disconnect') }}">Disconnect</a>
+            <a class="button is-primary" href="{{ url_for('collection.new') }}">New Collection</a>
+          {% else %}
+            <a class="button is-primary" id="metamaskConnect" onclick="onboardMetaMask();">Connect</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

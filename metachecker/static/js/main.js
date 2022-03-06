@@ -8,3 +8,7 @@ async function notif(s, t) {
   }).show();
   return
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  up.link.config.followSelectors.push('a[href]')
+});

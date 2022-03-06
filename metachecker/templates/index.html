@@ -2,24 +2,33 @@
 <html>
   {% include 'includes/head.html' %}
   <body>
+  {% include 'includes/navbar.html' %}
   <section class="section">
-    <div class="container">
-      {% include 'includes/navbar.html' %}
-
+    <div class="container has-text-centered">
       {% if collections %}
-        {% for _col in collections | batch(4) %}
-        <div class="columns">
-          {% for collection in _col %}
-          {% include 'includes/collection_card.html' %}
+      <table class="table screen-lg">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Metadata URI</th>
+            <th>Creation Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for collection in collections %}
+          <tr>
+            <td><a href="{{ url_for('collection.show', collection_id=collection.id) }}" up-target=".container">{{ collection.title }}</a></td>
+            <td>{{ collection.metadata_uri }}</td>
+            <td>{{ collection.create_date | humanize }}</td>
+          </tr>
           {% endfor %}
-        </div>
-        {% endfor %}
+        </tbody>
+        </table>
       {% else %}
         <div class="notification is-secondary has-text-centered">
           <p>You're not part of any collections yet</p>
         </div>
       {% endif %}
-
     </div>
   </section>
   {% include 'includes/footer.html' %}
