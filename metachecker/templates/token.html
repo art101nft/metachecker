@@ -19,12 +19,18 @@
         <div class="columns">
           <div class="column">
             {% if token.token_id > token.collection.start_token_id %}
-            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=token.token_id - 1) }}" up-follow up-cache="true" up-target=".container" up-preload up-transition="move-right"><- Back</a>
+            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=token.token_id - 1) }}" up-follow up-cache="true" up-target=".container" up-preload up-transition="move-right"><- #{{ token.token_id - 1 }}</a>
             {% endif %}
           </div>
+          {% set next = token.collection.get_tokens().first() %}
+          {% if next and token.id != next.id %}
+          <div class="column">
+            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=next.token_id) }}" up-follow up-cache="true" up-target=".container" up-preload up-transition="cross-fade">Unreviewed #{{ next.token_id }}</a>
+          </div>
+          {% endif %}
           <div class="column">
             {% if token.token_id < token.collection.end_token_id %}
-            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=token.token_id + 1) }}" up-follow up-cache="true" up-target=".container" up-preload up-transition="move-left">Next -></a>
+            <a class="button" href="{{ url_for('collection.show_token', collection_id=token.collection.id, token_id=token.token_id + 1) }}" up-follow up-cache="true" up-target=".container" up-preload up-transition="move-left">#{{ token.token_id + 1 }} -></a>
             {% endif %}
           </div>
         </div>
