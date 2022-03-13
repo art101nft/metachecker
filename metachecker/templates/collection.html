@@ -26,19 +26,19 @@
         <div class="level-item">
           <div>
             <p class="heading">Rejected</p>
-            <p class="title">0</p>
+            <p class="title">{{ collection.get_tokens(rejected=True).count() }}</p>
           </div>
         </div>
         <div class="level-item">
           <div>
             <p class="heading">Approved</p>
-            <p class="title">0</p>
+            <p class="title">{{ collection.get_tokens(approved=True).count() }}</p>
           </div>
         </div>
         <div class="level-item">
           <div>
             <p class="heading">Unreviewed</p>
-            <p class="title">0</p>
+            <p class="title">{{ collection.get_tokens().count() }}</p>
           </div>
         </div>
       </nav>

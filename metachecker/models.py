@@ -103,6 +103,14 @@ class Collection(db.Model):
         ).count()
         return tokens == len(range(self.start_token_id, self.end_token_id + 1))
 
+    def get_tokens(self, approved=False, rejected=False):
+        # By default return unreviewed tokens
+        return Token.query.filter(
+            Token.collection_id == self.id,
+            Token.approved == approved,
+            Token.rejected == rejected
+        )
+
     def __repr__(self):
         return str(f'collection-{self.id}')
 
