@@ -109,7 +109,7 @@ class Collection(db.Model):
             Token.collection_id == self.id,
             Token.approved == approved,
             Token.rejected == rejected
-        )
+        ).order_by(Token.create_date.asc())
 
     def __repr__(self):
         return str(f'collection-{self.id}')
@@ -119,6 +119,7 @@ class Token(db.Model):
     __tablename__ = 'tokens'
 
     id = db.Column(db.Integer, primary_key=True)
+    create_date = db.Column(db.DateTime, default=datetime.utcnow)
     token_id = db.Column(db.Integer)
     collection_id = db.Column(db.Integer, db.ForeignKey('collections.id'))
     collection = db.relationship('Collection', back_populates='tokens')
