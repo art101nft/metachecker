@@ -34,7 +34,10 @@
   word-wrap: break-word;
 }
 
-.mintedAVAX {
-  background-color: rgba(242,37,52,.2);
-  border: 2px solid rgba(243,37,52,1);
+.tokenStatus {
+  display: inline-flex;
+}
+
+.tokenStatus img {
+  margin-right: .3em;
 }

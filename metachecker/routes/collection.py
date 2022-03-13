@@ -112,7 +112,7 @@ def show_token(collection_id, token_id):
         return redirect(url_for('collection.index'))
     return render_template('token.html', token=token)
 
-@bp.route('/collection/<collection_id>/<token_id>/<action>', methods=['GET', 'POST'])
+@bp.route('/collection/<collection_id>/<token_id>/<action>')
 def update_token(collection_id, token_id, action):
     collection = Collection.query.get(collection_id)
     if not collection:
@@ -131,24 +131,22 @@ def update_token(collection_id, token_id, action):
     if not collection.user_can_access(current_user.id):
         flash('You are not allowed to access that collection.', 'warning')
         return redirect(url_for('collection.index'))
-    if request.method == 'POST':
-        if not request.form.get('reason'):
+    if action == 'approve':
+        token.rejected = False
+        token.approved = True
+        token.reject_reason = None
+        db.session.commit()
+        flash(f'Token was approved!', 'success')
+    elif action == 'reject':
+        if not request.args.get('reason'):
             flash('You need to specify a reason for rejection.', 'warning')
-            return redirect(url_for('collection.show', collection_id=collection_id))
-        else:
-            token.rejected = True
-            token.approved = False
-            token.reject_reason = request.form.get('reason')
-            db.session.commit()
-            flash('Token was rejected!', 'success')
+            return redirect(url_for('collection.show_token', collection_id=collection_id, token_id=token.token_id))
+        token.rejected = True
+        token.approved = False
+        token.reject_reason = request.args.get('reason')
+        db.session.commit()
+        flash(f'Token was rejected!', 'error')
     else:
-        if action == 'approve':
-            token.rejected = False
-            token.approved = True
-            token.reject_reason = None
-            db.session.commit()
-            flash('Token was approved!', 'success')
-        else:
-            flash('Unknown action.', 'warning')
+        flash('Unknown action.', 'warning')
     next = collection.get_tokens().first()
     return redirect(url_for('collection.show_token', collection_id=collection_id, token_id=next.token_id))
