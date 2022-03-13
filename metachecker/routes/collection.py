@@ -111,3 +111,43 @@ def show_token(collection_id, token_id):
         flash('You are not allowed to access that collection.', 'warning')
         return redirect(url_for('collection.index'))
     return render_template('token.html', token=token)
+
+@bp.route('/collection/<collection_id>/<token_id>/<action>', methods=['GET', 'POST'])
+def update_token(collection_id, token_id, action):
+    collection = Collection.query.get(collection_id)
+    if not collection:
+        flash('That collection does not exist!', 'warning')
+        return redirect(url_for('collection.index'))
+    token = Token.query.filter(
+        Token.token_id == token_id,
+        Token.collection_id == collection_id
+    ).first()
+    if not token:
+        flash('That token does not exist for that collection!', 'warning')
+        return redirect(url_for('collection.show', collection_id=collection_id))
+    if current_user.is_anonymous:
+        flash('Must be authenticated.', 'warning')
+        return redirect(url_for('collection.index'))
+    if not collection.user_can_access(current_user.id):
+        flash('You are not allowed to access that collection.', 'warning')
+        return redirect(url_for('collection.index'))
+    if request.method == 'POST':
+        if not request.form.get('reason'):
+            flash('You need to specify a reason for rejection.', 'warning')
+            return redirect(url_for('collection.show', collection_id=collection_id))
+        else:
+            token.rejected = True
+            token.approved = False
+            token.reject_reason = request.form.get('reason')
+            db.session.commit()
+            flash('Token was rejected!', 'success')
+    else:
+        if action == 'approve':
+            token.rejected = False
+            token.approved = True
+            token.reject_reason = None
+            db.session.commit()
+            flash('Token was approved!', 'success')
+        else:
+            flash('Unknown action.', 'warning')
+    return redirect(url_for('collection.show_token', collection_id=collection_id, token_id=token.token_id))

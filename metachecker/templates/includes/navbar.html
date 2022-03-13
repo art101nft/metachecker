@@ -17,7 +17,7 @@
             <a class="button is-danger" href="{{ url_for('meta.disconnect') }}">Disconnect</a>
             <a class="button is-primary" href="{{ url_for('collection.new') }}">New Collection</a>
           {% else %}
-            <a class="button is-primary" id="metamaskConnect" onclick="onboardMetaMask();">Connect</a>
+            <a class="button is-link" id="metamaskConnect" onclick="onboardMetaMask();">Connect</a>
           {% endif %}
         </div>
       </div>

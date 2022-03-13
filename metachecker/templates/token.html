@@ -6,7 +6,26 @@
   {% include 'includes/navbar.html' %}
   <section class="section">
     <div class="container has-text-centered">
+
+      <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
+        <ul>
+          <li><a href="{{ url_for('collection.index') }}" up-follow up-cache="true" up-target=".container" up-preload up-transition="cross-fade">Home</a></li>
+          <li><a href="{{ url_for('collection.show', collection_id=token.collection.id) }}" up-follow up-cache="true" up-target=".container" up-preload up-transition="cross-fade">{{ token.collection.title }}</a></li>
+          <li class="is-active"><a aria-current="page">#{{ token.token_id }}</a></li>
+        </ul>
+      </nav>
       <div class="content screen">
+
+        {% if token.approved %}
+        <div class="notification is-success">
+          This token was approved!
+        </div>
+        {% elif token.rejected %}
+        <div class="notification is-danger">
+          This token was rejected. Reason: <strong>{{ token.reject_reason }}</strong>
+        </div>
+        {% endif %}
+
         <div class="columns">
           <div class="column">
             {% if token.token_id > token.collection.start_token_id %}
@@ -19,17 +38,103 @@
             {% endif %}
           </div>
         </div>
+
         <img alt="{{ data.name }}" src="{{ data.image | convert_ipfs_uri }}" width=500px />
         <h1 class="title">{{ data.name }}</h1>
         <p class="block">{{ data.description }}</p>
         <div class="block">
           {% for attrib in data.attributes %}
-            <span class="tag is-light"><strong>{{ attrib.trait_type }}:</strong> {{ attrib.value }}</span>
+            <span class="tag is-light is-medium"><strong class="pr-1">{{ attrib.trait_type }}:</strong> {{ attrib.value }}</span>
           {% endfor %}
         </div>
+
+        {% if not token.approved and not token.rejected %}
+        <div class="columns">
+          <div class="column">
+            <a href="{{ url_for('collection.update_token', collection_id=token.collection.id, token_id=token.token_id, action='approve') }}" class="button is-success" style="width:100%;">Approve</a>
+          </div>
+          <div class="column">
+            <a class="button is-danger js-modal-trigger" data-target="modal-js-reject" style="width:100%;">Reject</a>
+          </div>
+        </div>
+        {% endif %}
+
       </div>
     </div>
+
+    <div id="modal-js-reject" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+          <h1 class="title">Reject</h1>
+          <p class="subtitle">Provide a reason for rejecting this item (incorrect metadata, rendering bug, bad trait match, etc)</p>
+          <form method="POST" enctype="multipart/form-data" class="site-form" action="{{ url_for('collection.update_token', collection_id=token.collection.id, token_id=token.token_id, action='reject') }}">
+            <div class="field">
+              <label class="label">Reason</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="reject reason..." name="reason">
+              </div>
+            </div>
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-danger" up-follow=".container">Reject</button>
+              </div>
+            </div>
+        </div>
+      </div>
+      <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
   </section>
   {% include 'includes/footer.html' %}
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Functions to open and close a modal
+    function openModal($el) {
+      $el.classList.add('is-active');
+    }
+
+    function closeModal($el) {
+      $el.classList.remove('is-active');
+    }
+
+    function closeAllModals() {
+      (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+        closeModal($modal);
+      });
+    }
+
+    // Add a click event on buttons to open a specific modal
+    (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+      const modal = $trigger.dataset.target;
+      const $target = document.getElementById(modal);
+      console.log($target);
+
+      $trigger.addEventListener('click', () => {
+        openModal($target);
+      });
+    });
+
+    // Add a click event on various child elements to close the parent modal
+    (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+      const $target = $close.closest('.modal');
+
+      $close.addEventListener('click', () => {
+        closeModal($target);
+      });
+    });
+
+    // Add a keyboard event to close all modals
+    document.addEventListener('keydown', (event) => {
+      const e = event || window.event;
+
+      if (e.keyCode === 27) { // Escape key
+        closeAllModals();
+      }
+    });
+    });
+  </script>
+
   </body>
 </html>

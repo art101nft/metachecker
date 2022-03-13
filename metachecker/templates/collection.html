@@ -38,10 +38,21 @@
         <div class="level-item">
           <div>
             <p class="heading">Unreviewed</p>
-            <p class="title">{{ collection.get_tokens().count() }}</p>
+            <p class="title">
+              {% set unreviewed = collection.get_tokens().count() %}
+              {% set next_token = collection.get_tokens().first() %}
+              <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=next_token.token_id) }}" up-target=".container" up-transition="cross-fade">
+                {{ unreviewed }}
+              </a>
+            </p>
           </div>
         </div>
       </nav>
+      <div class="columns">
+        <div class="column">
+
+        </div>
+      </div>
     </div>
   </section>
   {% include 'includes/footer.html' %}
