@@ -4,6 +4,7 @@ from datetime import datetime
 
 from flask_login import login_user
 from sqlalchemy import inspect
+from slugify import slugify
 
 from metachecker.factory import db
 from metachecker import config
@@ -95,7 +96,8 @@ class Collection(db.Model):
             return False
 
     def get_metadata_folder(self):
-        return f'{config.DATA_FOLDER}/json/{self.id}'
+        collection_folder = f'{self.id}-{slugify(self.metadata_uri)}'
+        return f'{config.DATA_FOLDER}/json/{collection_folder}'
 
     def is_sync_completed(self):
         tokens = Token.query.filter(
