@@ -24,26 +24,50 @@ def fetch_collection_metadata(collection_id: int):
                     Token.token_id == i,
                     Token.collection_id == collection.id
                 ).first()
-                if existing and os.path.exists(existing.get_metadata_path()):
-                    print(f'| {collection} token {i} already stored, skipping')
-                    continue
-                token_uri = str(collection.metadata_uri) + str(i)
-                print(f'\ fetching metadata for token {i} - {token_uri}')
-                r = None
-                try:
-                    r = requests.get(token_uri, timeout=20).json()
-                    t = Token(
+
+                fetch = False
+                add_db = False
+                metadata = None
+                token = None
+                metadata_uri = f'{collection.get_metadata_folder()}/{i}.json'
+
+                if existing:
+                    if os.path.exists(metadata_uri):
+                        print(f'| {collection} token {i} already stored, skipping')
+                        continue
+                    else:
+                        fetch = True
+                        token = existing
+                else:
+                    if os.path.exists(metadata_uri):
+                        add_db = True
+                    else:
+                        fetch = True
+                        add_db = True
+
+                if add_db:
+                    print(f'| adding database item for collection {collection} token {i}')
+                    token = Token(
                         collection_id=collection_id,
                         token_id=i
                     )
-                    db.session.add(t)
+                    db.session.add(token)
                     db.session.commit()
-                    print(f'/ saved token metadata at {t.get_metadata_path()}')
-                    t.set_metadata_dict(r)
-                    sleep(2)
-                except:
-                    print(f'! problem saving {collection} token {i}')
-                    continue
+
+                if fetch:
+                    token_uri = str(collection.metadata_uri) + str(i)
+                    print(f'\ fetching metadata for token {i} - {token_uri}')
+                    try:
+                        metadata = requests.get(token_uri, timeout=30).json()
+                        sleep(2)
+                    except:
+                        print(f'! problem saving collection {collection} token {i}')
+                        continue
+
+                    if token and metadata:
+                        token.set_metadata_dict(metadata)
+                        print(f'/ saved token metadata at {token.get_metadata_path()}')
+
 
 # @huey.periodic_task(crontab(minute='30', hour='*/2'))
 # def fetch_missed():
