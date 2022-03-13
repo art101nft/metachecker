@@ -150,4 +150,5 @@ def update_token(collection_id, token_id, action):
             flash('Token was approved!', 'success')
         else:
             flash('Unknown action.', 'warning')
-    return redirect(url_for('collection.show_token', collection_id=collection_id, token_id=token.token_id))
+    next = collection.get_tokens().first()
+    return redirect(url_for('collection.show_token', collection_id=collection_id, token_id=next.token_id))
