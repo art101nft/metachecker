@@ -22,5 +22,5 @@ def disconnect():
 @bp.route('/ipfs/<path:path>')
 def load_ipfs(path):
     ipfs_uri = f'{config.IPFS_SERVER}/ipfs/{path}'
-    res = requests.get(ipfs_uri, timeout=30)
+    res = requests.get(ipfs_uri, timeout=60)
     return res.content
