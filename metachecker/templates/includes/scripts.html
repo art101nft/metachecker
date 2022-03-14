@@ -8,17 +8,9 @@
 
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
-  <script type="text/javascript">
-    {% for category, message in messages %}
-      {% if category == None %}{% set category = 'info' %}{% endif %}
-      new Noty({
-        type: '{{ category }}',
-        theme: 'relax',
-        layout: 'topCenter',
-        text: '{{ message }}',
-        timeout: 4500
-      }).show();
-    {% endfor %}
-  </script>
+    {% if category == None %}{% set category = 'info' %}{% endif %}
+      {% for category, message in messages %}
+        <div class="notyBox" up-data='{"message": "{{ message }}", "category": "{{ category }}"}'></div>
+      {% endfor %}
   {% endif %}
 {% endwith %}

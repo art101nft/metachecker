@@ -4,12 +4,22 @@ from flask import Blueprint, request, jsonify
 from flask_login import current_user
 
 from metachecker.factory import db
-from metachecker.helpers import verify_signature
-from metachecker.models import User
+from metachecker.helpers import verify_signature, retrieve_token_metadata
+from metachecker.models import User, Token
 
 
 bp = Blueprint('api', 'api', url_prefix='/api/v1')
 
+
+@bp.route('/get_token_metadata/<token_id>')
+def get_token_metadata(token_id):
+    token = Token.query.get(token_id)
+    if not token:
+        return jsonify({'error': True, 'reason': 'Token does not exist'})
+    try:
+        return jsonify(retrieve_token_metadata(token_id))
+    except Exception as e:
+        return jsonify({'error': True, 'reason': e})
 
 @bp.route('/user_exists')
 def user_exists():

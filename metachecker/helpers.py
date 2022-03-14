@@ -1,7 +1,9 @@
-import ipfsApi
+import os, requests
 from eth_account.messages import encode_defunct
 
 from web3.auto import w3
+
+from metachecker.models import Token
 
 
 def verify_signature(message, signature, public_address):
@@ -12,30 +14,28 @@ def verify_signature(message, signature, public_address):
     else:
         return False
 
-def upload_to_ipfs(meme_id: str):
-    meme = Meme.query.get(meme_id)
-    if not meme:
+def retrieve_token_metadata(token_id):
+    token = Token.query.get(token_id)
+    if not token:
+        print('That token ID does not exist!')
         return False
-    try:
-        client = ipfsApi.Client('127.0.0.1', 5001)
-        artwork_hashes = client.add(meme.get_fs_path())
-        artwork_hash = artwork_hashes[0]['Hash']
-        print(f'[+] Uploaded artwork to IPFS: {artwork_hash}')
-        meta = {
-            'name': meme.title,
-            'description': meme.description,
-            'image': f'ipfs://{artwork_hash}',
-            'create_date': meme.create_date.strftime('%Y-%m-%d %H:%M:%S'),
-            'file_name': meme.file_name,
-            'ipfs_hash': artwork_hash,
-            'properties': {
-                'creator_handle': meme.user.handle,
-                'creator_address': meme.user.public_address
-            }
-        }
-        meta_hash = client.add_json(meta)
-        print(f'[+] Uploaded metadata to IPFS: {meta_hash}')
-        return (meta_hash, artwork_hash)
-    except Exception as e:
-        print(f'[!] Error: {e}')
-        return False
+    _f = token.collection.get_metadata_folder()
+    _t = token.get_metadata_path()
+    from_local = True
+    if not os.path.exists(_f):
+        os.makedirs(_f)
+        print(f'- created folder {_f}')
+    if not os.path.exists(_t):
+        token_uri = str(token.collection.metadata_uri) + str(token.token_id)
+        print(f'\ fetching metadata for collection {token.collection.id} token {token.token_id} - {token_uri}')
+        try:
+            metadata = requests.get(token_uri, timeout=30).json()
+            token.set_metadata_dict(metadata)
+            from_local = False
+            print(f'/ saved token metadata at {token.get_metadata_path()}')
+        except:
+            print(f'! problem saving collection {token.collection.id} token {token_id}')
+            return False
+    res = token.get_metadata_dict()
+    res['from_local'] = from_local
+    return res

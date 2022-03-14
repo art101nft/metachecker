@@ -1,4 +1,3 @@
-{% set data = token.get_metadata_dict() %}
 <!DOCTYPE html>
 <html>
   {% include 'includes/head.html' %}
@@ -47,28 +46,24 @@
 
         <div class="columns">
           <div class="column">
-            <h1 class="title">{{ data.name }}</h1>
-            <p class="block">{{ data.description }}</p>
+            <h1 class="title" id="tokenTitle" up-data="{{ token.id }}"><img src="/static/img/loading.gif" width=50></h1>
+            <p class="block" id="tokenDescription"></p>
             <div class="block"></div>
-            <ol>
-              {% for attrib in data.attributes %}
-                <li><span class="tag is-light is-medium"><strong class="pr-1">{{ attrib.trait_type }}:</strong> {{ attrib.value }}</span></li>
-              {% endfor %}
-            </ol>
+            <ol id="tokenTraits"></ol>
           </div>
           <div class="column">
-            <img alt="{{ data.name }}" src="{{ data.image | convert_ipfs_uri }}" width=500px />
+            <img src="/static/img/loading.gif" id="tokenImage" />
           </div>
         </div>
 
         {% if not token.approved and not token.rejected %}
         <div class="columns">
           <div class="column">
-            <a href="{{ url_for('collection.update_token', collection_id=token.collection.id, token_id=token.token_id, action='approve') }}" class="button is-success" style="width:100%;">Approve</a>
+            <a href="{{ url_for('collection.update_token', collection_id=token.collection.id, token_id=token.token_id, action='approve') }}" class="button is-success" style="width:100%;" up-follow=".container" up-transition="cross-fade">Approve</a>
           </div>
           <div class="column">
             <form method="GET" enctype="multipart/form-data" class="site-form" action="{{ url_for('collection.update_token', collection_id=token.collection.id, token_id=token.token_id, action='reject') }}">
-              <button class="button is-danger" style="width:100%;" up-follow=".container">Reject</button>
+              <button class="button is-danger" style="width:100%;" up-follow=".container" up-transition="cross-fade">Reject</button>
               <div class="field">
                 <div class="control">
                   <input class="input" type="text" placeholder="reject reason..." name="reason">
