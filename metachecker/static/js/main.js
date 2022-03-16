@@ -36,6 +36,12 @@ async function updateTokenInfo(tokenId) {
   } else {
     console.log(`Returned JSON payload from remote metadata API`);
   }
+  if (!data) {
+    document.getElementById('tokenTitle').innerHTML = 'Error';
+    document.getElementById('tokenDescription').innerHTML = 'Malformed JSON payload';
+    document.getElementById('tokenImage').src = '';
+    return false
+  }
   document.getElementById('tokenTitle').innerHTML = data.name;
   document.getElementById('tokenDescription').innerHTML = data.description;
   document.getElementById('tokenImage').src = loadImg(data.image);
