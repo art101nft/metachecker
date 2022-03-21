@@ -44,5 +44,5 @@ make huey
 # (8) In a new Terminal window, Run development server
 make dev
 
-# (9) Access the server at http://127.0.0.1:5000.
+# (9) Access the server at http://127.0.0.1:5000. (Make sure SERVER_NAME matches current server name)
 ```
