@@ -89,8 +89,13 @@ class Collection(db.Model):
             for c in inspect(self).mapper.column_attrs}
 
     def user_can_access(self, user_id):
-        if user_id == self.user_id or user_id in self.accesses:
-            return True
+        exists = User.query.get(user_id)
+        if exists:
+            collaborators = [i.public_address for i in self.accesses]
+            if user_id == self.user_id or exists.public_address in collaborators:
+                return True
+            else:
+                return False
         else:
             return False
 

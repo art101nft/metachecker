@@ -19,9 +19,8 @@ def index():
     if current_user.is_anonymous:
         collections = None
     else:
-        collections = Collection.query.filter(
-            User.id == current_user.id
-        ).order_by(Collection.create_date.desc()).all()
+        collections = Collection.query.filter().order_by(Collection.create_date.desc()).all()
+        collections = [i for i in collections if i.user_can_access(current_user.id)]
     return render_template('index.html', collections=collections)
 
 
@@ -64,11 +63,6 @@ def new():
 
 @bp.route('/collection/<collection_id>')
 def show(collection_id):
-    amt = 20
-    page = 1
-    _page = request.args.get('page')
-    if _page and _page.isnumeric() and int(_page) > 0:
-        page = int(_page)
     collection = Collection.query.filter(Collection.id == collection_id).first()
     if not collection:
         flash('That collection does not exist!', 'warning')
@@ -79,17 +73,9 @@ def show(collection_id):
     if not collection.user_can_access(current_user.id):
         flash('You are not allowed to access that collection.', 'warning')
         return redirect(url_for('collection.index'))
-    _tokens = Token.query.filter(
-        Token.collection_id == collection.id
-    )
-    total_pages = ceil(_tokens.count() / amt)
-    tokens = _tokens.paginate(page, amt, error_out=False).items
     return render_template(
         'collection.html',
-        collection=collection,
-        tokens=tokens,
-        total_pages=total_pages,
-        page=page
+        collection=collection
     )
 
 @bp.route('/collection/<collection_id>/add_collaborator')
@@ -100,10 +86,10 @@ def add_collaborator(collection_id):
         return redirect(url_for('collection.index'))
     if current_user.is_anonymous:
         flash('Must be authenticated.', 'warning')
-        return redirect(url_for('collection.index'))
+        return redirect(url_for('collection.show', collection_id=collection.id))
     if not collection.user_id == current_user.id:
         flash('Must be the owner of the collection to add collaborators.', 'warning')
-        return redirect(url_for('collection.index'))
+        return redirect(url_for('collection.show', collection_id=collection.id))
     address = request.args.get('address')
     if address:
         address = address.lower()
