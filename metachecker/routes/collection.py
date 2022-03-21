@@ -76,9 +76,14 @@ def show(collection_id):
     if not collection.user_can_access(current_user.id):
         flash('You are not allowed to access that collection.', 'warning')
         return redirect(url_for('collection.index'))
+    amount = 8
+    _a = request.args.get('amount')
+    if _a and _a.isnumeric():
+        amount = _a
     return render_template(
         'collection.html',
-        collection=collection
+        collection=collection,
+        amount=int(amount)
     )
 
 @bp.route('/collection/<collection_id>/add_collaborator')

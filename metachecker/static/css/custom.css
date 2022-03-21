@@ -45,3 +45,21 @@
 #updateButtons {
   display: none;
 }
+
+.previewPreload {
+  width: 30% !important;
+  margin: 0 auto;
+}
+
+.tokenPreview {
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+.approvedCard {
+  background-color: #48c78e;
+}
+
+.rejectedCard {
+  background-color: #f14668;
+}

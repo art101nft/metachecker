@@ -7,6 +7,10 @@ up.compiler('#tokenTitle', function(element, data) {
   updateTokenInfo(data)
 })
 
+up.compiler('.tokenPreview', function(element, data) {
+  updateTokenPreview(data)
+})
+
 up.compiler('.notyBox', function(element, data) {
   notif(data)
 })
@@ -26,6 +30,18 @@ function loadImg(_u) {
     return `/ipfs/${stripped}`
   } else {
     return _u
+  }
+}
+
+async function updateTokenPreview(tokenId) {
+  let data = await getTokenMetadata(tokenId);
+  if (data) {
+    let i = document.getElementById('tokenPreview-' + tokenId);
+    i.src = loadImg(data.image);
+    i.onload = function(){
+      i.width = 200;
+      i.classList.remove('previewPreload');
+    }
   }
 }
 
