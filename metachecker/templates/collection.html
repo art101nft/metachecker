@@ -59,7 +59,23 @@
       </nav>
       <div class="columns">
         <div class="column">
-
+          <form method="GET" style="width:50%;margin:auto;padding-top:2em;" enctype="multipart/form-data" class="site-form" action="{{ url_for('collection.add_collaborator', collection_id=collection.id) }}">
+            <div class="field">
+              <div class="control">
+                <input class="input" type="text" placeholder="Collaborator wallet address" name="address">
+              </div>
+            </div>
+            <button class="button is-success" up-follow=".container" up-transition="cross-fade">Add Collaborator</button>
+          </form>
+          <div class="pt-4">
+            <p class="subtitle pt-4">Collaborators</p>
+            <ul>
+              <li><strong>{{ collection.user.public_address }}</strong></li>
+            {% for access in collection.accesses %}
+              <li>{{ access.public_address }}</li>
+            {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

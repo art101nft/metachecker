@@ -25,7 +25,6 @@ class User(db.Model):
     nonce_date = db.Column(db.DateTime, default=datetime.utcnow)
     moderator = db.Column(db.Boolean, default=False)
     collections = db.relationship('Collection', back_populates='user')
-    accesses = db.relationship('Access', back_populates='user')
 
     def as_dict(self):
         return {c.key: getattr(self, c.key)
@@ -156,8 +155,7 @@ class Access(db.Model):
     __tablename__ = 'access'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = db.relationship('User', back_populates='accesses')
+    public_address = db.Column(db.String(180))
     collection_id = db.Column(db.Integer, db.ForeignKey('collections.id'))
     collection = db.relationship('Collection', back_populates='accesses')
 

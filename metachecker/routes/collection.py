@@ -3,8 +3,9 @@ from math import ceil
 from flask import Blueprint, render_template, flash
 from flask import request, redirect, url_for
 from flask_login import current_user
+from web3.auto import w3
 
-from metachecker.models import Collection, User, Token
+from metachecker.models import Collection, User, Token, Access
 from metachecker.tasks.metadata import fetch_collection_metadata
 from metachecker.factory import db
 from metachecker import config
@@ -90,6 +91,40 @@ def show(collection_id):
         total_pages=total_pages,
         page=page
     )
+
+@bp.route('/collection/<collection_id>/add_collaborator')
+def add_collaborator(collection_id):
+    collection = Collection.query.filter(Collection.id == collection_id).first()
+    if not collection:
+        flash('That collection does not exist!', 'warning')
+        return redirect(url_for('collection.index'))
+    if current_user.is_anonymous:
+        flash('Must be authenticated.', 'warning')
+        return redirect(url_for('collection.index'))
+    if not collection.user_id == current_user.id:
+        flash('Must be the owner of the collection to add collaborators.', 'warning')
+        return redirect(url_for('collection.index'))
+    address = request.args.get('address')
+    if address:
+        address = address.lower()
+        if w3.isAddress(address):
+            if collection.user.public_address == address:
+                flash('Cannot add that collaborator, they own the collection.', 'warning')
+            else:
+                exists = Access.query.filter(Access.public_address == address).first()
+                if exists:
+                    flash('Collaborator already added.', 'warning')
+                else:
+                    a = Access(
+                        public_address=address,
+                        collection_id=collection.id
+                    )
+                    db.session.add(a)
+                    db.session.commit()
+                    flash(f'Collaborator {address} added!', 'success')
+        else:
+            flash('Invalid ETH address provided.', 'error')
+    return redirect(url_for('collection.show', collection_id=collection.id))
 
 @bp.route('/collection/<collection_id>/<token_id>')
 def show_token(collection_id, token_id):
