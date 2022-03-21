@@ -14,23 +14,35 @@ Tools you will need:
 I have provided a `Makefile` with some helpful stuff...make sure to install `make` to use it.
 
 ```
-# install python virtual environment and install application dependencies
+
+# --------------------------------------------------------------------------------
+#                       STEP-BY-STEP DEVELOPMENT SET-UP
+# --------------------------------------------------------------------------------
+
+# (1) - Install Python Virtual Environment / Application dependencies
 make setup
 
-# setup secrets
+# (2) - Setup config secrets. NOTE: DATA_FOLDER should point to a real directory.
 cp env-example .env && vim .env
 
-# run services (ipfs + redis cache)
+# (3) - Start your Python Virtual Environment
+source .venv/bin/activate
+
+# (4) Install Huey and Redis via pip3
+pip3 install huey
+pip3 install redis
+
+# (5) Run IPFS / Redis Cache Services
 make up
 
-# initialize sqlite database w/ schema via alembic
+# (6) Initialize SQLite Database w/ Schema via Alembic
 make init
 
-# run huey
+# (7) Run Huey
 make huey
 
-# run development server
+# (8) In a new Terminal window, Run development server
 make dev
 
-# access at http://127.0.0.1:5000
+# (9) Access the server at http://127.0.0.1:5000. (Make sure SERVER_NAME matches current server name)
 ```
