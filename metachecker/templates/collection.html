@@ -28,9 +28,13 @@
             <p class="heading">Rejected</p>
             <p class="title">
               {% set rejected = collection.get_tokens(rejected=True) %}
+              {% if rejected.count() %}
               <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=rejected.first().token_id) }}?show=rejected" up-target=".container" up-transition="cross-fade">
                 {{ rejected.count() }}
               </a>
+              {% else %}
+              0
+              {% endif %}
             </p>
           </div>
         </div>
@@ -39,9 +43,13 @@
             <p class="heading">Approved</p>
             <p class="title">
               {% set approved = collection.get_tokens(approved=True) %}
+              {% if approved.count() %}
               <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=approved.first().token_id) }}?show=approved" up-target=".container" up-transition="cross-fade">
                 {{ approved.count() }}
               </a>
+              {% else %}
+              0
+              {% endif %}
             </p>
           </div>
         </div>
@@ -50,9 +58,13 @@
             <p class="heading">Unreviewed</p>
             <p class="title">
               {% set unreviewed = collection.get_tokens() %}
+              {% if unreviewed.count() %}
               <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=unreviewed.first().token_id) }}" up-target=".container" up-transition="cross-fade">
                 {{ unreviewed.count() }}
               </a>
+              {% else %}
+              0
+              {% endif %}
             </p>
           </div>
         </div>
