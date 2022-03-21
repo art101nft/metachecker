@@ -26,23 +26,32 @@
         <div class="level-item">
           <div>
             <p class="heading">Rejected</p>
-            <p class="title">{{ collection.get_tokens(rejected=True).count() }}</p>
+            <p class="title">
+              {% set rejected = collection.get_tokens(rejected=True) %}
+              <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=rejected.first().token_id) }}?show=rejected" up-target=".container" up-transition="cross-fade">
+                {{ rejected.count() }}
+              </a>
+            </p>
           </div>
         </div>
         <div class="level-item">
           <div>
             <p class="heading">Approved</p>
-            <p class="title">{{ collection.get_tokens(approved=True).count() }}</p>
+            <p class="title">
+              {% set approved = collection.get_tokens(approved=True) %}
+              <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=approved.first().token_id) }}?show=approved" up-target=".container" up-transition="cross-fade">
+                {{ approved.count() }}
+              </a>
+            </p>
           </div>
         </div>
         <div class="level-item">
           <div>
             <p class="heading">Unreviewed</p>
             <p class="title">
-              {% set unreviewed = collection.get_tokens().count() %}
-              {% set next_token = collection.get_tokens().first() %}
-              <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=next_token.token_id) }}" up-target=".container" up-transition="cross-fade">
-                {{ unreviewed }}
+              {% set unreviewed = collection.get_tokens() %}
+              <a href="{{ url_for('collection.show_token', collection_id=collection.id, token_id=unreviewed.first().token_id) }}" up-target=".container" up-transition="cross-fade">
+                {{ unreviewed.count() }}
               </a>
             </p>
           </div>

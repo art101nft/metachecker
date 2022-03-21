@@ -105,8 +105,12 @@ class Collection(db.Model):
         ).count()
         return tokens == len(range(self.start_token_id, self.end_token_id + 1))
 
-    def get_tokens(self, approved=False, rejected=False):
+    def get_tokens(self, approved=False, rejected=False, all=False):
         # By default return unreviewed tokens
+        if all:
+            return Token.query.filter(
+                Token.collection_id == self.id
+            ).order_by(Token.create_date.asc())
         return Token.query.filter(
             Token.collection_id == self.id,
             Token.approved == approved,

@@ -93,6 +93,7 @@ def show(collection_id):
 
 @bp.route('/collection/<collection_id>/<token_id>')
 def show_token(collection_id, token_id):
+    prev, next = None, None
     collection = Collection.query.get(collection_id)
     if not collection:
         flash('That collection does not exist!', 'warning')
@@ -110,7 +111,27 @@ def show_token(collection_id, token_id):
     if not collection.user_can_access(current_user.id):
         flash('You are not allowed to access that collection.', 'warning')
         return redirect(url_for('collection.index'))
-    return render_template('token.html', token=token)
+
+    _show = request.args.get('show')
+    rejected, approved, all = False, False, False
+    if _show == 'rejected':
+        rejected = True
+    elif _show == 'approved':
+        approved = True
+    else:
+        all = True
+    tokens = collection.get_tokens(rejected=rejected, approved=approved, all=all).all()
+    index = tokens.index(token)
+    if index + 1 < len(tokens):
+        next = tokens[index + 1]
+    if index > 0:
+        prev = tokens[index - 1]
+    return render_template(
+        'token.html',
+        token=token,
+        prev=prev,
+        next=next
+    )
 
 @bp.route('/collection/<collection_id>/<token_id>/<action>')
 def update_token(collection_id, token_id, action):

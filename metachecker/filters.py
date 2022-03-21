@@ -1,5 +1,6 @@
 from flask import Blueprint
 from arrow import get as arrow_get
+from urllib.parse import urlencode
 
 from metachecker import config
 
@@ -24,3 +25,11 @@ def humanize(d):
 def convert_ipfs_uri(u):
     ipfs = u.split('ipfs://')[1]
     return f'https://gateway.pinata.cloud/ipfs/{ipfs}'
+
+@bp.app_template_filter("fix_args")
+def trim_arg(all_args):
+    d = all_args.to_dict()
+    if d:
+        return '?' + urlencode(d)
+    else:
+        return ''
