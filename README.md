@@ -25,24 +25,17 @@ make setup
 # (2) - Setup config secrets. NOTE: DATA_FOLDER should point to a real directory.
 cp env-example .env && vim .env
 
-# (3) - Start your Python Virtual Environment
-source .venv/bin/activate
-
-# (4) Install Huey and Redis via pip3
-pip3 install huey
-pip3 install redis
-
-# (5) Run IPFS / Redis Cache Services
+# (3) Run IPFS / Redis Cache Services
 make up
 
-# (6) Initialize SQLite Database w/ Schema via Alembic
+# (4) Initialize SQLite Database w/ Schema via Alembic
 make init
 
-# (7) Run Huey
+# (5) Run Huey
 make huey
 
-# (8) In a new Terminal window, Run development server
+# (6) In a new Terminal window, Run development server
 make dev
 
-# (9) Access the server at http://127.0.0.1:5000. (Make sure SERVER_NAME matches current server name)
+# Access the server at http://127.0.0.1:5000. (Make sure SERVER_NAME in .env matches current server name)
 ```
