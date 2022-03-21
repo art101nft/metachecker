@@ -14,10 +14,10 @@
       <div class="navbar-item">
         <div class="buttons">
           {% if current_user.is_authenticated %}
-            <a class="button is-danger" href="{{ url_for('meta.disconnect') }}">Disconnect</a>
-            <a class="button is-primary" href="{{ url_for('collection.new') }}">New Collection</a>
+            <a class="button is-danger is-light" href="{{ url_for('meta.disconnect') }}">Disconnect</a>
+            <a class="button is-primary is-light" href="{{ url_for('collection.new') }}">New Collection</a>
           {% else %}
-            <a class="button is-link" id="metamaskConnect" onclick="onboardMetaMask();">Connect</a>
+            <a class="button is-link is-light" id="metamaskConnect" onclick="onboardMetaMask();">Connect</a>
           {% endif %}
         </div>
       </div>
