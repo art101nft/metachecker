@@ -57,7 +57,7 @@
         </div>
 
         {% if not token.approved and not token.rejected %}
-        <div class="columns">
+        <div class="columns" id="updateButtons">
           <div class="column">
             <a href="{{ url_for('collection.update_token', collection_id=token.collection.id, token_id=token.token_id, action='approve') }}" class="button is-success" style="width:100%;" up-follow=".container" up-transition="cross-fade">Approve</a>
           </div>

@@ -41,3 +41,7 @@
 .tokenStatus img {
   margin-right: .3em;
 }
+
+#updateButtons {
+  display: none;
+}
