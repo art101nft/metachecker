@@ -29,6 +29,9 @@ def new():
     if not current_user.is_authenticated:
         flash('You need to connect your wallet first.', 'warning')
         return redirect(url_for('collection.index'))
+    if not current_user.is_admin:
+        flash('You are not able to add new collections.', 'warning')
+        return redirect(url_for('collection.index'))
     if request.method == 'POST':
         if not request.form.get('title'):
             flash('You need to specify a collection title.', 'warning')

@@ -47,9 +47,6 @@ class User(db.Model):
 
     @property
     def is_admin(self):
-        return self.admin
-
-    def is_moderator(self):
         return self.moderator
 
     def get_id(self):
