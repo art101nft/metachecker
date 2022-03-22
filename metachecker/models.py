@@ -114,6 +114,7 @@ class Collection(db.Model):
             ).order_by(Token.create_date.asc())
         if end:
             return Token.query.filter(
+                Token.collection_id == self.id,
                 Token.token_id >= start,
                 Token.token_id < end
             ).order_by(Token.create_date.asc())
