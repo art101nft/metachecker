@@ -30,7 +30,13 @@ def add(address):
         db.session.commit()
         click.echo(f'[+] Added moderator status to `{address}`')
     else:
-        click.echo('[.] That is not a valid user.')
+        u = User(
+            public_address=address,
+            moderator=True
+        )
+        db.session.add(u)
+        db.session.commit()
+        click.echo('[+] Created new user as moderator.')
 
 
 @bp.cli.command('remove')
