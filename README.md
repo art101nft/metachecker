@@ -98,9 +98,6 @@ cp conf/metachecker.service /etc/systemd/system/metachecker.service
 systemctl daemon-reload
 systemctl enable metachecker
 systemctl start metachecker
-
-# setup ongoing syncing with remote servers and Avalanche network
-crontab -u metachecker conf/crontab
 ```
 
 At this point you should have Nginx web server running with TLS certificates generated with Letsencrypt/Certbot, Systemd services for IPFS daemon for serving files and Gunicorn for serving the Flask application.
