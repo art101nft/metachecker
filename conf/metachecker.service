@@ -1,0 +1,25 @@
+[Unit]
+Description=metachecker gunicorn service
+Documentation=https://metachecker.io
+After=network.target
+
+[Service]
+PermissionsStartOnly = true
+PIDFile = /opt/metachecker/data/gunicorn/metachecker.pid
+User = metachecker
+Group = metachecker
+WorkingDirectory = /opt/metachecker
+ExecStartPre = /bin/mkdir -p /opt/metachecker/data/gunicorn
+ExecStartPre = /bin/chown -R metachecker:metachecker /opt/metachecker/data/gunicorn
+Environment = FLASK_APP=metachecker/app.py
+Environment = FLASK_SECRETS=config.py
+Environment = FLASK_ENV=production
+Environment = FLASK_DEBUG=0
+ExecStart = /opt/metachecker/.venv/bin/gunicorn --bind 127.0.0.1:4001 "metachecker.app:app" --log-file /opt/metachecker/data/gunicorn/gunicorn.log --pid /opt/metachecker/data/gunicorn/metachecker.pid --reload
+ExecReload = /bin/kill -s HUP /opt/metachecker/data/gunicorn/metachecker.pid
+ExecStop = /bin/kill -s TERM /opt/metachecker/data/gunicorn/metachecker.pid
+ExecStopPost = /bin/rm -rf /opt/metachecker/data/gunicorn/metachecker.pid
+PrivateTmp = true
+
+[Install]
+WantedBy=default.target
