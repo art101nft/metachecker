@@ -66,7 +66,10 @@ async function updateTokenInfo(tokenId) {
     newChild.innerHTML = `<span class="tag is-light is-medium"><strong class="pr-1">${i.trait_type}:</strong> ${i.value}</span>`;
     document.getElementById('tokenTraits').appendChild(newChild);
   })
-  document.getElementById('updateButtons').style.display = 'flex';
+  let buttons = document.getElementById('updateButtons')
+  if (buttons) {
+    buttons.style.display = 'flex';
+  }
 }
 
 async function notif(data) {
