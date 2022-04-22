@@ -28,7 +28,7 @@ def create_app():
     app.config.from_envvar('FLASK_SECRETS')
     setup_db(app)
     login_manager = LoginManager(app)
-    login_manager.login_view = 'meme.index'
+    login_manager.login_view = 'collection.index'
     login_manager.logout_view = 'meta.disconnect'
 
     @login_manager.user_loader
